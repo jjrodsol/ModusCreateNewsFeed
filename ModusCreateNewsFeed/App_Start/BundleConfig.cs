@@ -12,6 +12,18 @@ namespace ModusCreateNewsFeed
         // Para obtener más información sobre las uniones, visite https://go.microsoft.com/fwlink/?LinkID=303951
         public static void RegisterBundles(BundleCollection bundles)
         {
+            // jQuery
+            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+                        "~/Scripts/jquery-3.1.1.min.js"));
+
+            // jQueryUI CSS
+            bundles.Add(new ScriptBundle("~/Scripts/plugins/jquery-ui/jqueryuiStyles").Include(
+                        "~/Scripts/plugins/jquery-ui/jquery-ui.min.css"));
+
+            // jQueryUI 
+            bundles.Add(new StyleBundle("~/bundles/jqueryui").Include(
+                        "~/Scripts/plugins/jquery-ui/jquery-ui.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/WebFormsJs").Include(
                             "~/Scripts/WebForms/WebForms.js",
                             "~/Scripts/WebForms/WebUIValidation.js",
@@ -32,7 +44,11 @@ namespace ModusCreateNewsFeed
             // Use la versión de desarrollo de Modernizr para desarrollar y aprender. Luego, cuando esté listo
             // para la producción, use la herramienta de compilación disponible en https://modernizr.com para seleccionar solo las pruebas que necesite
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                            "~/Scripts/modernizr-*"));
+                            "~/Scripts/modernizr-*"));            
+
+            // Bootstrap
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                      "~/Scripts/bootstrap.js"));
         }
     }
 }

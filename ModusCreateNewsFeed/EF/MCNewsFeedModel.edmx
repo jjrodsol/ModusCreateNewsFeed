@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MCNewsFeedDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Articles">
+          <Key>
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="ArticleID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FeedID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Summary" Type="nvarchar" MaxLength="3000" />
+          <Property Name="DatePublished" Type="datetime" />
+          <Property Name="Author" Type="nvarchar" MaxLength="100" />
+          <Property Name="Link" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="CategoryID" />
+          </Key>
+          <Property Name="CategoryID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Feeds">
+          <Key>
+            <PropertyRef Name="FeedID" />
+          </Key>
+          <Property Name="FeedID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Url" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CategoryID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'E:\GITHUB\MODUSCREATENEWSFEED\MODUSCREATENEWSFEED\APP_DATA\MCNEWSFEEDDB.MDF.dbo.ArticlesView' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="ArticlesView">
+          <Key>
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="ArticleID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FeedID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Summary" Type="nvarchar" MaxLength="3000" />
+          <Property Name="DatePublished" Type="datetime" />
+          <Property Name="Author" Type="nvarchar" MaxLength="100" />
+          <Property Name="Link" Type="nvarchar" MaxLength="500" />
+          <Property Name="FeedName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CategoryID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'E:\GITHUB\MODUSCREATENEWSFEED\MODUSCREATENEWSFEED\APP_DATA\MCNEWSFEEDDB.MDF.dbo.FeedsView' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="FeedsView">
+          <Key>
+            <PropertyRef Name="FeedID" />
+            
+            
+            
+            
+          </Key>
+          <Property Name="FeedID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Url" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CategoryID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Articles_Feeds">
+          <End Role="Feeds" Type="Self.Feeds" Multiplicity="1" />
+          <End Role="Articles" Type="Self.Articles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Feeds">
+              <PropertyRef Name="FeedID" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="FeedID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Feeds_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
+          <End Role="Feeds" Type="Self.Feeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Feeds">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MCNewsFeedDBModelStoreContainer">
+          <EntitySet Name="Articles" EntityType="Self.Articles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Feeds" EntityType="Self.Feeds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ArticlesView" EntityType="Self.ArticlesView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ArticlesView].[ArticleID] AS [ArticleID], 
+    [ArticlesView].[FeedID] AS [FeedID], 
+    [ArticlesView].[Title] AS [Title], 
+    [ArticlesView].[Summary] AS [Summary], 
+    [ArticlesView].[DatePublished] AS [DatePublished], 
+    [ArticlesView].[Author] AS [Author], 
+    [ArticlesView].[Link] AS [Link], 
+    [ArticlesView].[FeedName] AS [FeedName], 
+    [ArticlesView].[CategoryName] AS [CategoryName], 
+    [ArticlesView].[CategoryID] AS [CategoryID]
+    FROM [dbo].[ArticlesView] AS [ArticlesView]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="FeedsView" EntityType="Self.FeedsView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [FeedsView].[FeedID] AS [FeedID], 
+    [FeedsView].[Name] AS [Name], 
+    [FeedsView].[Description] AS [Description], 
+    [FeedsView].[Url] AS [Url], 
+    [FeedsView].[CategoryID] AS [CategoryID], 
+    [FeedsView].[CategoryName] AS [CategoryName]
+    FROM [dbo].[FeedsView] AS [FeedsView]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Articles_Feeds" Association="Self.FK_Articles_Feeds">
+            <End Role="Feeds" EntitySet="Feeds" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Feeds_Categories" Association="Self.FK_Feeds_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Feeds" EntitySet="Feeds" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MCNewsFeedDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryID" />
+          </Key>
+          <Property Name="CategoryID" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Feed">
+          <Key>
+            <PropertyRef Name="FeedID" />
+          </Key>
+          <Property Name="FeedID" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CategoryID" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FeedView">
+          <Key>
+            <PropertyRef Name="FeedID" />
+          </Key>
+          <Property Name="FeedID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CategoryID" Type="Guid" Nullable="false" />
+          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Feeds_Categories">
+          <End Role="Categories" Type="Self.Category" Multiplicity="1" />
+          <End Role="Feeds" Type="Self.Feed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Feeds">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MCNewsFeedDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Feeds" EntityType="Self.Feed" />
+          <EntitySet Name="FeedsView" EntityType="MCNewsFeedDBModel.FeedView" />
+          <AssociationSet Name="FK_Feeds_Categories" Association="Self.FK_Feeds_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Feeds" EntitySet="Feeds" />
+          </AssociationSet>
+          <EntitySet Name="Articles" EntityType="MCNewsFeedDBModel.Article" />
+          <AssociationSet Name="FK_Articles_Feeds" Association="MCNewsFeedDBModel.FK_Articles_Feeds">
+            <End Role="Feed" EntitySet="Feeds" />
+            <End Role="Article" EntitySet="Articles" />
+          </AssociationSet>
+          <EntitySet Name="ArticlesView" EntityType="MCNewsFeedDBModel.ArticleView" />
+        </EntityContainer>
+        <EntityType Name="Article">
+          <Key>
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="ArticleID" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FeedID" Type="Guid" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Summary" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="DatePublished" Type="DateTime" Precision="3" />
+          <Property Name="Author" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Link" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Articles_Feeds">
+          <End Type="MCNewsFeedDBModel.Feed" Role="Feed" Multiplicity="1" />
+          <End Type="MCNewsFeedDBModel.Article" Role="Article" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Feed">
+              <PropertyRef Name="FeedID" />
+            </Principal>
+            <Dependent Role="Article">
+              <PropertyRef Name="FeedID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ArticleView">
+          <Key>
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="ArticleID" Type="Guid" Nullable="false" />
+          <Property Name="FeedID" Type="Guid" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Summary" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="DatePublished" Type="DateTime" Precision="3" />
+          <Property Name="Author" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Link" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FeedName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryID" Type="Guid" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MCNewsFeedDBModelStoreContainer" CdmEntityContainer="MCNewsFeedDBEntities">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="MCNewsFeedDBModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Feeds">
+            <EntityTypeMapping TypeName="MCNewsFeedDBModel.Feed">
+              <MappingFragment StoreEntitySet="Feeds">
+                <ScalarProperty Name="FeedID" ColumnName="FeedID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FeedsView">
+            <EntityTypeMapping TypeName="MCNewsFeedDBModel.FeedView">
+              <MappingFragment StoreEntitySet="FeedsView">
+                <ScalarProperty Name="FeedID" ColumnName="FeedID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Articles">
+            <EntityTypeMapping TypeName="MCNewsFeedDBModel.Article">
+              <MappingFragment StoreEntitySet="Articles">
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="DatePublished" ColumnName="DatePublished" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="FeedID" ColumnName="FeedID" />
+                <ScalarProperty Name="ArticleID" ColumnName="ArticleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ArticlesView">
+            <EntityTypeMapping TypeName="MCNewsFeedDBModel.ArticleView">
+              <MappingFragment StoreEntitySet="ArticlesView">
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="FeedName" ColumnName="FeedName" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="DatePublished" ColumnName="DatePublished" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="FeedID" ColumnName="FeedID" />
+                <ScalarProperty Name="ArticleID" ColumnName="ArticleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
